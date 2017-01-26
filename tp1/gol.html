@@ -1,0 +1,143 @@
+<html>
+  <body>
+    <div id="output"></div>
+    <script type='text/javascript'>
+	   //la grille de cellule avec un ensemble fixe (le carré) et un clignotant
+	   var monde = [
+    	[0,0,0,0,0,0,0,0],
+    	[0,1,1,0,0,0,0,0],
+    	[0,1,1,0,0,0,0,0],
+    	[0,0,0,0,0,0,0,0],
+    	[0,0,0,0,1,0,0,0],
+    	[0,0,0,0,1,0,0,0],
+    	[0,0,0,0,1,0,0,0],
+    	[0,0,0,0,0,0,0,0]
+    	];
+	   //fonction créeant un tableau à deux dimensions de nbLig lignes et nbCol colonnes, initialisé avec la valeur value
+	   //il est conseillé de commencer avec un tableau à une dimension dans lequel on ajoute progressivement chacune des lignes, représentées sous la forme d'un tableau à une dimension de nombres
+	
+	   var mondeVide = function(nbLig, nbCol, value){
+  	   var t = [];
+        for(var i = 0; i<nbLig; i++){
+          var tcol = [];
+          for(var j = 0; j<nbCol; j++) {
+           tcol.push(value);
+          }
+        t.push(tcol);
+        }
+       return t;
+	   };
+	
+	   //il vaut mieux avoir un tableau temporaire lors du calcul de la génération suivante ;)
+	   var mondeTMP = mondeVide(8,8,0);
+	   //fonction prenant en paramètre un tableau à deux dimensions contenant des 0 et 1 qui affiche le tableau sous forme de caractère dans la <tt>div</tt> d'<tt>id</tt> égal à <tt>GOLScreen</tt>
+	
+	   var affiche = function(m) {
+  		  var screen = document.getElementById("output");
+  		  screen.style['font-family'] = 'monospace';
+  		  screen.innerHTML = '';
+  		  for (var idxL=0; idxL<m.length; idxL++) {
+     		 var ligne = "";
+     		 for (var idxC=0; idxC<m[0].length; idxC++) {
+       		 ligne += (m[idxL][idxC] === 0 ? '.' : '*');
+     		 }
+     		 var node = document.createTextNode(ligne);
+     		 screen.appendChild(node);
+     		 var newLine = document.createElement("br");
+     		 screen.appendChild(newLine);
+  		  }
+	   }
+
+      var afficheGraphique = function(m) {
+        var screen = document.getElementById("output");
+        screen.style['font-family'] = 'monospace';
+        screen.innerHTML = '';
+        for (var idxL=0; idxL<m.length; idxL++) {
+         var ligne = "";
+         for (var idxC=0; idxC<m[0].length; idxC++) {
+           ligne += (m[idxL][idxC] === 0 ? '.' : '*');
+         }
+         var node = document.createTextNode(ligne);
+         screen.appendChild(node);
+         var newLine = document.createElement("br");
+         screen.appendChild(newLine);
+        }
+     }
+
+	   //calcul le nombre de cellules vivantes autour de la cellule de coordonnées (lig, col)
+	   var voisins = function(l, c) {
+    		var nbVoisins = 0;
+        if(monde[l-1][c-1]===1) {
+          nbVoisins++;
+        }
+        if(monde[l-1][c]===1) {
+          nbVoisins++;
+        }
+        if(monde[l-1][c+1]===1) {
+          nbVoisins++;
+        }
+        if(monde[l][c-1]===1) {
+          nbVoisins++;
+        }
+        if(monde[l][c+1]===1) {
+          nbVoisins++;
+        }
+        if(monde[l+1][c-1]===1) {
+          nbVoisins++;
+        }
+        if(monde[l+1][c]===1) {
+          nbVoisins++;
+        }
+        if(monde[l+1][c+1]===1) {
+          nbVoisins++;
+        }
+        return nbVoisins;
+	    };
+
+	   //détermine l'état d'une cellule à la génération suivante, le premier paramètre vaut 0 ou 1 (état de la cellule actuelle et le second correspond au nombre de cellules vivantes l'entourant
+	   var evolution = function(vivante, nbVoisins) {
+        var res = 0;
+        if(vivante===0){
+          //t mort !!!
+          if(nbVoisins===3){
+            res = 1;
+            //t plus mort !!!
+          } else {
+            res = 0;
+          }
+        } else {
+          //t vivant !!!
+          if(nbVoisins===3||nbVoisins===2){
+            //t un survivant !
+            res = 1;
+          } else {
+            //t mort ! dommage!
+            res = 0;
+          }
+        }
+        return res;
+	   }
+
+	   //effectue un pas de simulation, en parcourant monde et initialisant mondeTMP avec les cellules de la génération suivante, puis recopie mondeTMP dans monde
+	   var simule = function() {
+        mondeTMP = mondeVide(monde.length, monde[0].length, 0);
+    		for(var i=1; i<monde.length-1; i++){
+          for(var j=1; j<monde[0].length-1; j++){
+            mondeTMP[i][j] = evolution(monde[i][j],voisins(i,j));
+          }
+        }
+        monde=mondeTMP;
+        /*for(var k=0; k<monde.length;k++){
+          for(var l=0; l<monde[0].length;l++){
+            monde[k][l] = mondeTMP[k][l];
+          }
+        }*/
+	   };
+
+	   //appelle toutes les secondes la fonction passée en premier paramètre
+	   for (var i=0; i<5; i++) {
+  		  setTimeout(function() {afficheGraphique(monde); simule(); }, 1000*i);
+	   }
+	 </script>
+  </body>
+</html>
