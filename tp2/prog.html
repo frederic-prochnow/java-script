@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Programme</title>
+    </head>
+    <body>
+        <div id="essai1" width='600' height='400'></div>
+        <-- <div id="essai2" width='600' height='400'></div> -->
+        <script>
+            // récupération de l'élément canvas sur lequel faire les dessins
+            var canvas = document.getElementById("essai1");
+            // récupération du contexte graphique
+            var gfx    = canvas.getContext("2d");
+
+            var randomColor = function(bound) {
+                return Math.ceil(Math.random()*bound);
+            }
+
+            for (var i=0; i<100; i++) {
+                // tirage aléatoire de la couleur
+                gfx.fillStyle = 'rgb('+randomColor(255)+','+randomColor(255)+','+randomColor(255)+')';
+                // dessin d'un rectable placé aléatoirement sur le canvas
+                gfx.fillRect(Math.random()*600,Math.random()*200,Math.random()*100,Math.random()*100);
+            }
+            /*
+            // récupération du contexte graphique
+            var canvas = document.getElementById("essai2");
+            var gfx    = canvas.getContext("2d");
+            var chessSymbols = new Image();
+            chessSymbols.src = 'chess.png';
+            chessSymbols.onload = function() {
+            console.info("Chess symbols loaded!");
+            gfx.drawImage(chessSymbols,0,0,canvas.width,canvas.height,0,0,canvas.width,canvas.height);
+            gfx.drawImage(chessSymbols,0,0,(canvas.width/12),canvas.height,(canvas.width/2),75,(canvas.width/12),canvas.height);
+            };
+            */
+        </script>
+    </body>
+</html>
