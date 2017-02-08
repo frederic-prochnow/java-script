@@ -1,22 +1,25 @@
+<--
+FREDERIC PROCHNOW
+-->
 <html>
   <head>
     <script type='text/javascript'>
     // On tente de charger l'image au plus tôt !
     var chessSymbols = new Image();
     chessSymbols.src = 'chess.png';
-    chessSymbols.onload = function() {
-    console.info("Chess symbols loaded !");
-    // dessine la grille, une fois l'image chargée
-    // drawGrid(0,0, canvas.width, canvas.height, 8, 8); 
-    };
     </script>
   </head>
   <body>
     <h1>Deep blue version JS</h1>
-    <center><canvas id='screen' width='400' height='400' >JavaScript est nécessaire ...</canvas></center>
+    <center><canvas id='screen' width='600' height='600' >JavaScript est nécessaire ...</canvas></center>
     <script type='text/javascript'>
+        chessSymbols.onload = function() {
+            console.info("Chess symbols loaded !");
+            // dessine la grille, une fois l'image chargée
+            drawGrid(0,0, canvas.width, canvas.height, 8, 8); 
+        };
         var canvas = document.getElementById("screen");
-        var gfx    = canvas.getContext("2d");
+        var gfx    = canvas.getContext('2d');
         
         // définition du constructeur du type Piece
         var Piece = function(name, color, line, column){
@@ -44,18 +47,56 @@
         Pawn.prototype = new Piece();
 
         var createBoard = function(nbLine, nbColumn) {
-            for(int l=0;l<nbLine);l++){
-                for(int c=0;c<nbColumn;c++){
-                    
-                }
-            }
+            var grille = new Array(nbColumn);
+			for (var i = 0; i <= nbColumn; i++) {
+				grille[i] = new Array(nbLine);
+			}
+			return grille;
         }
-        //var isEmpty = function(lig, col)
-        //var put = function(lig, col, piece)
-
-        //var board = createBoard(8, 8);
-
-        //var initBoard = function() // avec les pièces du jeu
+        
+		var isEmpty = function(lig, col) {
+			return (board[col][lig].isEmpty) ? +1 : -1;
+		}
+        var put = function(lig, col, piece){
+			board[col][lig] = piece;
+		}
+        var board = createBoard(8, 8);
+		
+		//TOUR<>CAVALIER<>EVEQUE<>DAME<>ROI <>EVEQUE<>CAVALIER<>TOUR
+		//PION<>PION    <>PION  <>PION<>PION<>PION  <>PION    <>PION
+	
+		//PION<>PION    <>PION  <>PION<>PION<>PION  <>PION    <>PION
+		//TOUR<>CAVALIER<>EVEQUE<>DAME<>ROI <>EVEQUE<>CAVALIER<>TOUR
+        var initBoard = function() {
+			// case vide		
+			for(var i=2; i<=5; i++){
+                for(var j=0; j<=8; j++){
+                    put(i,j,new Piece());
+			     }
+		  }
+		   //case de pieces
+		   put(0,0,new Piece("Rook","white",0,0));
+		   put(0,1,new Piece("Knight","white",0,1));
+		   put(0,2,new Piece("Bishop","white",0,2));
+		   put(0,3,new Piece("Queen","white",0,3));
+		   put(0,4,new Piece("King","white",0,4));
+		   put(0,5,new Piece("Bishop","white",0,5));
+		   put(0,6,new Piece("Knight","white",0,6));
+		   put(0,7,new Piece("Rook","white",0,7));
+		   put(7,0,new Piece("Rook","black",7,0));
+		   put(7,1,new Piece("Knight","black",7,1));
+		   put(7,2,new Piece("Bishop","black",7,2));
+		   put(7,3,new Piece("Queen","black",7,3));
+		   put(7,4,new Piece("King","black",7,4));
+		   put(7,5,new Piece("Bishop","black",7,5));
+		   put(7,6,new Piece("Knight","black",7,6));
+		   put(7,7,new Piece("Rook","black",7,7));
+		   //case de pions
+		   for(var k=0; k<=7; k++){
+				put(1,k,new Piece("Pawn","white",1,k));
+				put(6,k,new Piece("Pawn","black",6,k));
+		   }
+		}
 
         var convertCoordinates = function(ligPixel, colPixel) {
             var lig = Math.ceil(ligPixel / (canvas.height/8)) - 1;
@@ -70,14 +111,21 @@
         // on prend la coordonnée de la cellule à dessiner et une couleur correspondant 
         // au carré dessiné dans la case si elle ne contient pas de pièce (gris si la 
         // case n'est pas sélectionnée pour représenter un déplacement valide et jaune sinon) 
-        // var drawCell = function(coord, color)
+        var drawCell = function(coord, color){
+            // si piece vide alors carré gris foncé
+            // sinon dessni de la pièce en allant copier l'image dans chessSymbols
+            gfx.strokeStyle = color;
+            gfx.strokeRect(coord[0]+10,coord[1]+10,(canvas.width/8)-10,(canvas.height/8)-10)
+        }
     
-        //var highlight = function(on)
+        var highlight = function(on){
+            
+        }
     
         canvas.addEventListener("mousedown", mouseClicked, false);
         //var mouseClicked = function(event) { // Pourquoi cela ne fonctionne pas avec var ?!
         function mouseClicked(event) {
-            /*    var ligCoord = event.pageY - canvas.offsetTop;
+            var ligCoord = event.pageY - canvas.offsetTop;
             var colCoord = event.pageX - canvas.offsetLeft;
             var coord    = convertCoordinates(ligCoord, colCoord);
             console.info(coord);
@@ -93,16 +141,40 @@
             } else {
                 // TODO: if empty and highlighted, move the piece !
                 // doMove();
-            }*/
+            }
         }   
 
         // initialise le plateau en déposant les pièces de deux joueurs au début de la partie
-        //initBoard();
+        initBoard();
 
         // Pour dessiner le plateau, on spécifie le coin supérieur gauche, la 
         // largeur et la hauteur. Dans cette fonction, on appelle drawCell 
         // pour dessiner une cellule à une coordonnée donnée.
-        //var drawGrid = function(x, y, width, height, nbLig, nbCol) {
+        var drawGrid = function(x, y, width, height, nbLig, nbCol) {
+            // le dessin du damier
+            for(var l=0; l < nbLig; l++){
+                for(var c=0; c <nbCol; c++){
+                    if(l%2==0){
+                         if(c%2==0){
+                            gfx.fillStyle = "rgb(200,200,200)";
+                            drawCell([l,c],"white");
+                        }else{
+                            gfx.fillStyle = "rgb(232,232,232)";
+                            drawCell([l,c],"white");
+                        }
+                    }else{
+                        if(c%2==0){
+                            gfx.fillStyle = "rgb(232,232,232)";
+                            drawCell([l,c],"white");
+                        }else{
+                            gfx.fillStyle = "rgb(200,200,200)";
+                            drawCell([l,c],"white");
+                        }
+                    }
+                    gfx.fillRect(x+(width/nbCol)*c,y+(height/nbLig)*l,width/nbCol,height/nbLig);
+                }
+            }
+        }
     </script>
   </body>
 </html>
