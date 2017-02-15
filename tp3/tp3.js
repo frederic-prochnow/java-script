@@ -4,6 +4,9 @@ var jsonData ;
   $(function() {
   // Remplissage du tableau
   // A vous de compléter
+  var valeur = JSON.parse(jsonData);
+  //puis valeur[i]
+  //valeur[i].nom attribut
   }) ;
 
 $(function() {
