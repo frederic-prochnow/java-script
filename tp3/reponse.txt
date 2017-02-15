@@ -1,0 +1,40 @@
+exo 1:
+
+$('#exo1').hide();
+$('#exo1').show();
+$('.impair').hide();
+$('.impair').show();
+$('ul a').hide();
+$('ul a').show();
+$('#exo1 > p').hide();
+$('#exo1 > p').show();
+$('ul + li').hide();
+$('ul + li').show();
+$('#exo1 ul li:nth-child(3)').hide();
+$('#exo1 ul li:nth-child(3)').show();
+$('#exo1 ul li:first-child').hide();
+$('#exo1 ul li:first-child').show();
+$('#exo1 ul li:last-child').hide();
+$('#exo1 ul li:last-child').show();
+
+exo2:
+
+$('#exo2 ul li:first-child').html();
+$('#exo2 ul li:first-child').text();
+la diffrence entre .hmtl et .text est sur l'hyperlien qui reste actif avec .html() mais est considérée comme du simple texte avec .text()
+$('ul a').attr('href','http://www.univ-lille1.fr');
+$('#exo2 ul li').height(24);
+&('#exo2 input').attr('name');
+
+
+exo 3:
+
+var table = $('#table1');
+table.html("")
+for(var i=0; i<8; i++){
+  var tr= $('<tr>');
+  for(var j=0; j<8; j++){
+    $("<td> "+ (i*8+j) +"</td>").appendTo(tr);
+  }
+  tr.appendTo(table);
+}
