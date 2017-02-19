@@ -4,9 +4,78 @@ var jsonData ;
   $(function() {
   // Remplissage du tableau
   // A vous de compléter
-  var valeur = JSON.parse(jsonData);
-  //puis valeur[i]
-  //valeur[i].nom attribut
+  // 2015-08-31
+  var original = JSON.parse(jsonData);
+  // TRI PAR JOUR
+  var trijour = [];
+  var nb = 0;
+  for(var jour= 1; jour<=31; jour ++){
+      for(var t =0; t<original.length; t++){
+        if(parseInt(original[t][0].substring(8)) === jour){
+           trijour[nb] = original[t];
+           nb++;
+        }
+      }
+  }
+  //TRI PAR MOIS
+  var trimois = [];
+  var nb2=0;
+  for(var mois=1; mois<=12; mois ++){
+      for(var l =0; l<trijour.length; l++){
+        if(parseInt(trijour[l][0].substring(5,7)) === mois){
+           trimois[nb2] = trijour[l];
+           nb2++;
+        }
+      }
+  }
+  //TRI PAR HEURE
+  var triheure = [];
+  var nb3=0;
+  for(var heure=0; heure<=2000; heure ++){
+      for(var h =0; h<trimois.length; h++){
+        if(parseInt(trimois[h][1])=== heure){
+           triheure[nb3] = trimois[h];
+           nb3++;
+        }
+      }
+  }
+  var valeur = trimois;
+  // AFFICHAGE
+  var table = $('#table2');
+  for(var i=0; i<valeur.length; i++){
+      var tr = $('<tr>');
+      var memDate = valeur[i][0];
+      valeur[i][0] = memDate.substring(8) + '/' + memDate.substring(5,7) + '/' + memDate.substring(0,4);
+      $('<td>'+valeur[i][0]+'</td>').appendTo(tr);
+      var memHeure = valeur[i][1];
+      var memDuree = valeur[i][2];
+      if(valeur[i][1].length === 3){
+        valeur[i][1] = '0'+memHeure;
+        memHeure = valeur[i][1];
+      }
+      if(valeur[i][2].length === 3){
+        valeur[i][2] = '0'+memDuree;
+        memHeure = valeur[i][1];
+      }
+      var heureF = parseInt(valeur[i][1]) + parseInt(valeur[i][2]);
+      var heureFin = ""+heureF;
+      valeur[i][1] = memHeure.substring(0,2) + ':' + memHeure.substring(2);
+      heureFin = heureFin.substring(0,2) + ':' + heureFin.substring(2);
+      $('<td>'+valeur[i][1]+' - '+heureFin+'</td>').appendTo(tr);
+      if(valeur[i][4] === null){
+         $('<td></td>').appendTo(tr);
+      }else{
+         $('<td>'+valeur[i][4]+'</td>').appendTo(tr);
+      }
+      if(valeur[i][6] === null){
+         $('<td></td>').appendTo(tr);
+      }else{
+         $('<td>'+valeur[i][6]+'</td>').appendTo(tr);
+      }
+      $('<td>'+valeur[i][3]+'</td>').appendTo(tr);
+      tr.appendTo(table);
+  }
+  
   }) ;
 
 $(function() {
