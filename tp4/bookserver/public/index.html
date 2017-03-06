@@ -60,19 +60,19 @@ $(document).ready(function() {
     <div id="ajouter">
         <li>Ajouter un nouveau livre.</li>
         <form>
-        <input id="auteur" type="text" name="auteur" value="auteur">
-        <input id="titre" type="text" name="titre" value="titre">
-        <input type="submit" value="ajouter">
+        <input id="ajout_auteur" type="text" name="auteur" value="auteur">
+        <input id="ajout_titre" type="text" name="titre" value="titre">
+        <input id="bouton_ajout" type="submit" value="ajouter">
         </form >
         <script>
-        $('#ajouter').click(function (event) {
+        $('#bouton_ajout').click(function (event) {
             $.ajax({
                 // The URL for the request
                 url: "books",
                 // The data to send (will be converted to a query string)
                 data: {
-                    author: $('#auteur').val(),
-                    title: $('#titre').val()
+                    author: $('#ajout_auteur').val(),
+                    title: $('#ajout_titre').val()
                 },
                 // Whether this is a POST/GET/UPDATE/DELETE request
                 type: "POST",
@@ -106,18 +106,94 @@ $(document).ready(function() {
     <div id="modifier">
         <li>Modifier un livre existant</li>
         <form>
-        <input type="text" name="id" value="id">
-        <input type="text" name="auteur" value="auteur">
-        <input type="text" name="titre" value="titre">
-        <input type="submit" value="modifier">
+        <input id="modif_id" type="text" name="id" value="id">
+        <input id="modif_auteur" type="text" name="auteur" value="auteur">
+        <input id="modif_titre" type="text" name="titre" value="titre">
+        <input id="bouton_modif" type="submit" value="modifier">
         </form>
+        <script>
+        $('#bouton_modif').click(function (event) {
+            $.ajax({
+                // The URL for the request
+                url: "books",
+                // The data to send (will be converted to a query string)
+                data: {
+                    id: &('#modif_id').val(),
+                    author: $('#modif_auteur').val(),
+                    title: $('#modif_titre').val()
+                },
+                // Whether this is a POST/GET/UPDATE/DELETE request
+                type: "UPDATE",
+                // The type of data we expect back
+                dataType : "json",
+                // Code to run if the request succeeds;
+                // the response is passed to the function
+                success: function( json ) {
+                    $("#afficher_modif").text(JSON.stringify(json));
+                    //$("<h1>").text(json.title).appendTo("body");
+                    $("<div class=\"content\">").html(json.html).appendTo("body");
+                },
+                // Code to run if the request fails; the raw request and
+                // status codes are passed to the function
+                error: function( xhr, status, errorThrown ) {
+                    alert( "Sorry, there was a problem!" );
+                    console.log( "Error: " + errorThrown );
+                    console.log( "Status: " + status );
+                    console.dir( xhr );
+                },
+                // Code to run regardless of success or failure
+                complete: function( xhr, status ) {
+                    alert( "The request is complete!" );
+                }
+            });
+        });
+        </script>
+    </div>
+    <div id="afficher_modif">
     </div>
     <div id="supprimer">
         <li>Supprimer un livre existant</li>
         <form>
-        <input type="text" name="id" value="id">
-        <input type="submit" value="supprimer">
+        <input id="suppr_id" type="text" name="id" value="id">
+        <input id="bouton_suppr" type="submit" value="supprimer">
         </form>
+        <script>
+        $('#bouton_suppr').click(function (event) {
+            $.ajax({
+                // The URL for the request
+                url: "books",
+                // The data to send (will be converted to a query string)
+                data: {
+                    id: $('#suppr_id').val()
+                },
+                // Whether this is a POST/GET/UPDATE/DELETE request
+                type: "DELETE",
+                // The type of data we expect back
+                dataType : "json",
+                // Code to run if the request succeeds;
+                // the response is passed to the function
+                success: function( json ) {
+                    $("#afficher_suppr").text(JSON.stringify(json));
+                    //$("<h1>").text(json.title).appendTo("body");
+                    $("<div class=\"content\">").html(json.html).appendTo("body");
+                },
+                // Code to run if the request fails; the raw request and
+                // status codes are passed to the function
+                error: function( xhr, status, errorThrown ) {
+                    alert( "Sorry, there was a problem!" );
+                    console.log( "Error: " + errorThrown );
+                    console.log( "Status: " + status );
+                    console.dir( xhr );
+                },
+                // Code to run regardless of success or failure
+                complete: function( xhr, status ) {
+                    alert( "The request is complete!" );
+                }
+            });
+        });
+        </script>
+    </div>
+    <div id="afficher_suppr">
     </div>
   </body>
 </html>
