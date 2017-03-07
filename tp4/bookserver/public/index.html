@@ -3,7 +3,7 @@
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="css/style.css"/>
     <title>Welcome to BOOKS !</title>
-    <script src='js/jquery-2.1.3.js'/>
+    <script src='js/jquery-2.1.3.js'></script>
     <script>
 // IMPORTANT ! Otherwise the DOM is not yet created !
 $(document).ready(function() {
@@ -20,6 +20,7 @@ $(document).ready(function() {
     <div id='lister'>
         <li>Lister tous vos livres</li>
         <script>
+	$(document).ready(function() {
         $('#lister').click(function (event) {
             $.ajax({
                 // The URL for the request
@@ -52,7 +53,8 @@ $(document).ready(function() {
                     alert( "The request is complete!" );
                 }
             });
-        });
+              });
+	      });
         </script>
     </div>
     <div id="afficher_lister">
@@ -118,7 +120,7 @@ $(document).ready(function() {
                 url: "books",
                 // The data to send (will be converted to a query string)
                 data: {
-                    id: &('#modif_id').val(),
+                    id: $('#modif_id').val(),
                     author: $('#modif_auteur').val(),
                     title: $('#modif_titre').val()
                 },
